@@ -104,7 +104,7 @@ class AuthService {
 			throw new ApiError(401, "Invalid email or password", [], "INVALID_CREDENTIALS");
 		}
 
-		const memberships = await this.repository.findMembershipByUserId(user.id);
+		const memberships = await this.repository.findMembershipByMemberId(user.id);
 		const organization = memberships[0]?.organization;
 
 		return this.#createAuthResponse(user, organization);

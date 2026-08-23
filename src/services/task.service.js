@@ -104,7 +104,7 @@ class TaskService {
       status,
       priority,
       dueDate: parsedDueDate,
-      createdBy: creatorId,
+      createdBy: creatorAdminId,
       assignedTo: assignedTo || null,
     });
 

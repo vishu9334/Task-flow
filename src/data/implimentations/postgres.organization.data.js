@@ -57,9 +57,9 @@ class PostgresOrganizationData extends IOrganizationRepository {
     });
   }
 
-  async findOrganizationsByMemberId(memberId) {
+  async findOrganizationsByAdminId(adminId) {
     const memberships = await this.client.organizationMember.findMany({
-      where: { userId: memberId },
+      where: { userId: adminId },
       include: {
         organization: {
           include: {

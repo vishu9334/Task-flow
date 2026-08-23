@@ -53,12 +53,12 @@ class OrganizationService {
     return organization;
   }
 
-  async getMyOrganizations({ memberId }) {
-    if (!memberId) {
+  async getMyOrganizations({ adminId }) {
+    if (!adminId) {
       throw new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED");
     }
 
-    return this.orgRepo.findOrganizationsByMemberId(memberId);
+    return this.orgRepo.findOrganizationsByAdminId(adminId);
   }
 
   async addMember({ orgId, requesterAdminId, requesterRole, email, role = "MEMBER" }) {

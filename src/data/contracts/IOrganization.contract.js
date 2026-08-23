@@ -11,8 +11,8 @@ class IOrganizationRepository {
     throw new Error("IOrganizationRepository.findOrganizationBySlug must be implemented");
   }
 
-  async findOrganizationsByMemberId(_memberId) {
-    throw new Error("IOrganizationRepository.findOrganizationsByMemberId must be implemented");
+  async findOrganizationsByAdminId(_adminId) {
+    throw new Error("IOrganizationRepository.findOrganizationsByAdminId must be implemented");
   }
 
   async addMember(_memberData) {

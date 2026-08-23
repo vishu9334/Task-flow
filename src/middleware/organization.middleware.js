@@ -15,7 +15,7 @@ class OrganizationMiddleware {
         );
       }
 
-      const memberships = await postgresAuthData.findMembershipByUserId(req.user.sub);
+      const memberships = await postgresAuthData.findMembershipByMemberId(req.user.sub);
       const membership = memberships.find((item) => item.organizationId === organizationId);
 
       if (!membership) {

@@ -27,7 +27,7 @@ class OrganizationController {
 
   async getMyOrganizations(req, res) {
     const organizations = await this.service.getMyOrganizations({
-      memberId: req.user.sub,
+      adminId: req.user.sub,
     });
 
     return res
