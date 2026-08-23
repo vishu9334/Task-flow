@@ -56,9 +56,9 @@ services:
       - AUTH_RATE_LIMIT=10
       - AUTH_RATE_WINDOW_MS=60000
       - REGISTRATION_TTL_SECONDS=120
-      - BREVO_API_KEY=mock
-      - BREVO_FROM_NAME=TaskFlow
-      - BREVO_FROM_EMAIL=no-reply@taskflow.dev
+      - BREVO_API_KEY=${BREVO_API_KEY:-mock}
+      - BREVO_FROM_NAME=${BREVO_FROM_NAME:-TaskFlow}
+      - BREVO_FROM_EMAIL=${BREVO_FROM_EMAIL:-no-reply@taskflow.dev}
     depends_on:
       postgres:
         condition: service_healthy
@@ -87,9 +87,9 @@ services:
       - AUTH_RATE_LIMIT=10
       - AUTH_RATE_WINDOW_MS=60000
       - REGISTRATION_TTL_SECONDS=120
-      - BREVO_API_KEY=mock
-      - BREVO_FROM_NAME=TaskFlow
-      - BREVO_FROM_EMAIL=no-reply@taskflow.dev
+      - BREVO_API_KEY=${BREVO_API_KEY:-mock}
+      - BREVO_FROM_NAME=${BREVO_FROM_NAME:-TaskFlow}
+      - BREVO_FROM_EMAIL=${BREVO_FROM_EMAIL:-no-reply@taskflow.dev}
     depends_on:
       postgres:
         condition: service_healthy

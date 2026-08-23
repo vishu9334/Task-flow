@@ -91,7 +91,8 @@ class AuthService {
 	}
 
 	async login({ email, password }) {
-		const user = await this.repository.findUserByEmail(email);
+		const normalizedEmail = email ? email.trim().toLowerCase() : "";
+		const user = await this.repository.findUserByEmail(normalizedEmail);
 
 		if (!user || !user.isActive || !user.isVerified) {
 			throw new ApiError(401, "Invalid email or password", [], "INVALID_CREDENTIALS");
