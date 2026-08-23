@@ -23,6 +23,10 @@ class IProjectRepository {
     throw new Error('IProjectRepository.updateProject must be implemented');
   }
 
+  async countActiveTasksByProjectId(_projectId) {
+    throw new Error('IProjectRepository.countActiveTasksByProjectId must be implemented');
+  }
+
   async softDeleteProject(_projectId, _deletedAt) {
     throw new Error('IProjectRepository.softDeleteProject must be implemented');
   }

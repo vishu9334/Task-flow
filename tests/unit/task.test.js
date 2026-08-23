@@ -86,4 +86,29 @@ describe("Unit Tests: Task Logic & Assignment Validation", () => {
       }
     );
   });
+
+  it("should enforce RESTRICT constraint: reject project deletion when active tasks exist", async () => {
+    const { ProjectService } = await import("../../src/services/project.service.js");
+    const mockProjectRepo = {
+      findProjectById: async () => ({ id: "proj-1", orgId: "org-1" }),
+      countActiveTasksByProjectId: async () => 3, // 3 active tasks exist
+      softDeleteProject: async () => {},
+    };
+    const projectService = new ProjectService(mockProjectRepo);
+
+    await assert.rejects(
+      async () => {
+        await projectService.deleteProject({
+          projectId: "proj-1",
+          orgId: "org-1",
+          userRole: "ADMIN",
+        });
+      },
+      (err) => {
+        assert.strictEqual(err.statusCode, 400);
+        assert.strictEqual(err.code, "PROJECT_HAS_ACTIVE_TASKS");
+        return true;
+      }
+    );
+  });
 });

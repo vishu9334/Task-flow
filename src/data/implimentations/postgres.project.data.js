@@ -154,6 +154,15 @@ class PostgresProjectData extends IProjectRepository {
     });
   }
 
+  async countActiveTasksByProjectId(projectId) {
+    return this.client.task.count({
+      where: {
+        projectId,
+        deletedAt: null,
+      },
+    });
+  }
+
   async softDeleteProject(projectId, deletedAt = new Date()) {
     return this.client.project.update({
       where: { id: projectId },

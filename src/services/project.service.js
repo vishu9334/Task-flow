@@ -156,6 +156,17 @@ class ProjectService {
     // Verify existence & tenant ownership
     await this.getProjectById({ projectId, orgId });
 
+    // PDF Task 01 RESTRICT Rule: Prevent project deletion if active tasks exist
+    const activeTasksCount = await this.repository.countActiveTasksByProjectId(projectId);
+    if (activeTasksCount > 0) {
+      throw new ApiError(
+        400,
+        `Cannot delete project with ${activeTasksCount} active task(s). Please delete or reassign all tasks first.`,
+        [],
+        "PROJECT_HAS_ACTIVE_TASKS"
+      );
+    }
+
     await this.repository.softDeleteProject(projectId, new Date());
 
     return {
