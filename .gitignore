@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets/
+
+# Generated Prisma client
+/generated/
+/generated/prisma/
+
+# Runtime logs & test coverage
+logs/
+*.log
+coverage/
+
+# OS generated files
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# IDE, Editor and AI assistant metadata
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
+.vscode/
+.idea/

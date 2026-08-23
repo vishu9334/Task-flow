@@ -1,0 +1,168 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id              String               @id @default(uuid()) @db.Uuid
+  firstName       String               @db.VarChar(50)
+  lastName        String               @db.VarChar(50)
+  username        String               @unique @db.VarChar(30)
+  email           String               @unique @db.VarChar(255)
+  passwordHash    String               @db.VarChar(255)
+  role            UserRole             @default(USER)
+  isActive        Boolean              @default(true)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  isVerified      Boolean              @default(false)
+  organizations   Organization[]
+  memberships     OrganizationMember[]
+  projectsCreated Project[]
+  createdTasks    Task[]               @relation("TaskCreator")
+  assignedTasks   Task[]               @relation("TaskAssignee")
+  taskAssignments TaskAssignment[]
+  comments        Comment[]
+  refreshTokens   RefreshToken[]
+}
+
+model Organization {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  name      String   @db.VarChar(100)
+  slug      String   @unique @db.VarChar(100)
+  isActive  Boolean  @default(true)
+  orgCount  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  members  OrganizationMember[]
+  projects Project[]
+}
+
+model OrganizationMember {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  userId         String   @db.Uuid
+  role           UserRole
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@unique([organizationId, userId])
+}
+
+model Project {
+  id          String    @id @default(uuid()) @db.Uuid
+  orgId       String    @db.Uuid
+  name        String    @db.VarChar(150)
+  description String?   @db.Text
+  createdBy   String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  organization Organization @relation(fields: [orgId], references: [id])
+  creator      User         @relation(fields: [createdBy], references: [id])
+  tasks        Task[]
+
+  @@index([orgId])
+  @@index([createdBy])
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Task {
+  id          String       @id @default(uuid()) @db.Uuid
+  projectId   String       @db.Uuid
+  title       String       @db.VarChar(150)
+  description String?      @db.Text
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  createdBy   String       @db.Uuid
+  assignedTo  String?      @db.Uuid
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+
+  project     Project          @relation(fields: [projectId], references: [id])
+  creator     User             @relation("TaskCreator", fields: [createdBy], references: [id])
+  assignee    User?            @relation("TaskAssignee", fields: [assignedTo], references: [id])
+  assignments TaskAssignment[]
+  comments    Comment[]
+
+  @@index([projectId])
+  @@index([createdBy])
+  @@index([assignedTo])
+}
+
+model TaskAssignment {
+  id         String   @id @default(uuid()) @db.Uuid
+  taskId     String   @db.Uuid
+  userId     String   @db.Uuid
+  assignedAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([taskId, userId])
+  @@index([userId])
+}
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  tokenHash String   @unique @db.VarChar(64)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Comment {
+  id        String    @id @default(uuid()) @db.Uuid
+  taskId    String    @db.Uuid
+  userId    String    @db.Uuid
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  task Task @relation(fields: [taskId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([taskId])
+  @@index([userId])
+}
