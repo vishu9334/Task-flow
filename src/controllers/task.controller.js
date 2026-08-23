@@ -113,12 +113,12 @@ class TaskController {
 
   async assignTask(req, res) {
     const { id } = req.params;
-    const { userId } = req.body;
+    const assigneeMemberId = req.body.memberId || req.body.userId;
 
     const task = await this.service.assignTask({
       taskId: id,
       orgId: req.organizationId,
-      assigneeId: userId,
+      assigneeId: assigneeMemberId,
     });
 
     return res
@@ -128,12 +128,12 @@ class TaskController {
 
   async unassignTask(req, res) {
     const { id } = req.params;
-    const { userId } = req.body;
+    const assigneeMemberId = req.body.memberId || req.body.userId;
 
     const task = await this.service.unassignTask({
       taskId: id,
       orgId: req.organizationId,
-      assigneeId: userId,
+      assigneeId: assigneeMemberId,
     });
 
     return res
