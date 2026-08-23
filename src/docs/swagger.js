@@ -512,9 +512,9 @@ const swaggerOptions = {
               "application/json": {
                 schema: {
                   type: "object",
-                  required: ["userId"],
+                  required: ["memberId"],
                   properties: {
-                    userId: { type: "string", format: "uuid" },
+                    memberId: { type: "string", format: "uuid", description: "Organization Member ID" },
                   },
                 },
               },
@@ -528,7 +528,7 @@ const swaggerOptions = {
       },
       "/tasks/{id}/unassign": {
         post: {
-          summary: "Unassign user from task",
+          summary: "Unassign member from task",
           tags: ["Tasks"],
           security: [{ bearerAuth: [] }, { cookieAuth: [] }, { organizationHeader: [] }],
           parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
@@ -538,9 +538,9 @@ const swaggerOptions = {
               "application/json": {
                 schema: {
                   type: "object",
-                  required: ["userId"],
+                  required: ["memberId"],
                   properties: {
-                    userId: { type: "string", format: "uuid" },
+                    memberId: { type: "string", format: "uuid", description: "Organization Member ID" },
                   },
                 },
               },

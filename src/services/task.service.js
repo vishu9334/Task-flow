@@ -14,7 +14,7 @@ class TaskService {
 
   async createTask({
     orgId,
-    userId,
+    creatorAdminId,
     projectId,
     title,
     description,
@@ -23,6 +23,9 @@ class TaskService {
     dueDate,
     assignedTo,
   }) {
+    if (!creatorAdminId) {
+      throw new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED");
+    }
     if (!orgId) {
       throw new ApiError(403, "Organization context is required", [], "ORGANIZATION_REQUIRED");
     }
@@ -101,7 +104,7 @@ class TaskService {
       status,
       priority,
       dueDate: parsedDueDate,
-      createdBy: userId,
+      createdBy: creatorId,
       assignedTo: assignedTo || null,
     });
 
@@ -306,25 +309,25 @@ class TaskService {
     };
   }
 
-  async assignTask({ taskId, orgId, assigneeId }) {
-    if (!assigneeId) {
-      throw new ApiError(400, "Assignee user ID is required", [], "VALIDATION_ERROR");
+  async assignTask({ taskId, orgId, memberId }) {
+    if (!memberId) {
+      throw new ApiError(400, "Assignee member ID is required", [], "VALIDATION_ERROR");
     }
 
     const task = await this.getTaskById({ taskId, orgId });
 
     // PDF Rule: "The assigned user must belong to the same organization as the task"
-    const membership = await this.taskRepo.findMembership(orgId, assigneeId);
+    const membership = await this.taskRepo.findMembership(orgId, memberId);
     if (!membership) {
       throw new ApiError(
         400,
-        "Assigned user must belong to the same organization as the task",
+        "Assigned member must belong to the same organization as the task",
         [],
         "INVALID_ASSIGNEE"
       );
     }
 
-    const updatedTask = await this.taskRepo.assignTask(taskId, assigneeId);
+    const updatedTask = await this.taskRepo.assignTask(taskId, memberId);
 
     // Enqueue BullMQ notification job
     if (membership.user?.email) {
@@ -344,14 +347,14 @@ class TaskService {
     return updatedTask;
   }
 
-  async unassignTask({ taskId, orgId, assigneeId }) {
-    if (!assigneeId) {
-      throw new ApiError(400, "Assignee user ID is required", [], "VALIDATION_ERROR");
+  async unassignTask({ taskId, orgId, memberId }) {
+    if (!memberId) {
+      throw new ApiError(400, "Assignee member ID is required", [], "VALIDATION_ERROR");
     }
 
-    const task = await this.getTaskById({ taskId, orgId });
+    await this.getTaskById({ taskId, orgId });
 
-    const updatedTask = await this.taskRepo.unassignTask(taskId, assigneeId);
+    const updatedTask = await this.taskRepo.unassignTask(taskId, memberId);
 
     return updatedTask;
   }

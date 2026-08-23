@@ -27,11 +27,11 @@ class ITaskRepository {
     throw new Error("ITaskRepository.softDeleteTask must be implemented");
   }
 
-  async assignTask(_taskId, _userId) {
+  async assignTask(_taskId, _memberId) {
     throw new Error("ITaskRepository.assignTask must be implemented");
   }
 
-  async unassignTask(_taskId, _userId) {
+  async unassignTask(_taskId, _memberId) {
     throw new Error("ITaskRepository.unassignTask must be implemented");
   }
 
@@ -39,7 +39,7 @@ class ITaskRepository {
     throw new Error("ITaskRepository.getDashboardCountsByOrgId must be implemented");
   }
 
-  async findMembership(_orgId, _userId) {
+  async findMembership(_orgId, _memberId) {
     throw new Error("ITaskRepository.findMembership must be implemented");
   }
 }

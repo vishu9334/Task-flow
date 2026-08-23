@@ -284,18 +284,18 @@ class PostgresTaskData extends ITaskRepository {
     });
   }
 
-  async assignTask(taskId, userId) {
+  async assignTask(taskId, memberId) {
     return this.client.$transaction(async (transaction) => {
       await transaction.taskAssignment.upsert({
         where: {
           taskId_userId: {
             taskId,
-            userId,
+            userId: memberId,
           },
         },
         create: {
           taskId,
-          userId,
+          userId: memberId,
           assignedAt: new Date(),
         },
         update: {
@@ -305,7 +305,7 @@ class PostgresTaskData extends ITaskRepository {
 
       return transaction.task.update({
         where: { id: taskId },
-        data: { assignedTo: userId },
+        data: { assignedTo: memberId },
         include: {
           creator: {
             select: {
@@ -335,12 +335,12 @@ class PostgresTaskData extends ITaskRepository {
     });
   }
 
-  async unassignTask(taskId, userId) {
+  async unassignTask(taskId, memberId) {
     return this.client.$transaction(async (transaction) => {
       await transaction.taskAssignment.deleteMany({
         where: {
           taskId,
-          userId,
+          userId: memberId,
         },
       });
 
@@ -405,12 +405,12 @@ class PostgresTaskData extends ITaskRepository {
     return formattedCounts;
   }
 
-  async findMembership(orgId, userId) {
+  async findMembership(orgId, memberId) {
     return this.client.organizationMember.findUnique({
       where: {
         organizationId_userId: {
           organizationId: orgId,
-          userId,
+          userId: memberId,
         },
       },
       include: {

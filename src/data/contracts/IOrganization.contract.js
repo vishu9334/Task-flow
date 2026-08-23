@@ -11,8 +11,8 @@ class IOrganizationRepository {
     throw new Error("IOrganizationRepository.findOrganizationBySlug must be implemented");
   }
 
-  async findOrganizationsByUserId(_userId) {
-    throw new Error("IOrganizationRepository.findOrganizationsByUserId must be implemented");
+  async findOrganizationsByMemberId(_memberId) {
+    throw new Error("IOrganizationRepository.findOrganizationsByMemberId must be implemented");
   }
 
   async addMember(_memberData) {
@@ -23,7 +23,7 @@ class IOrganizationRepository {
     throw new Error("IOrganizationRepository.findMembersByOrgId must be implemented");
   }
 
-  async findMembership(_orgId, _userId) {
+  async findMembership(_orgId, _memberId) {
     throw new Error("IOrganizationRepository.findMembership must be implemented");
   }
 }

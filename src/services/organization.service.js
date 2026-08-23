@@ -20,8 +20,8 @@ class OrganizationService {
     this.authRepo = authRepo;
   }
 
-  async createOrganization({ userId, name, slug }) {
-    if (!userId) {
+  async createOrganization({ adminId, name, slug }) {
+    if (!adminId) {
       throw new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED");
     }
 
@@ -47,21 +47,21 @@ class OrganizationService {
     const organization = await this.orgRepo.createOrganization({
       name: name.trim(),
       slug: resolvedSlug,
-      userId,
+      adminId,
     });
 
     return organization;
   }
 
-  async getMyOrganizations({ userId }) {
-    if (!userId) {
+  async getMyOrganizations({ memberId }) {
+    if (!memberId) {
       throw new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED");
     }
 
-    return this.orgRepo.findOrganizationsByUserId(userId);
+    return this.orgRepo.findOrganizationsByMemberId(memberId);
   }
 
-  async addMember({ orgId, requesterUserId, requesterRole, email, role = "MEMBER" }) {
+  async addMember({ orgId, requesterAdminId, requesterRole, email, role = "MEMBER" }) {
     if (!orgId) {
       throw new ApiError(403, "Organization context is required", [], "ORGANIZATION_REQUIRED");
     }
@@ -90,7 +90,7 @@ class OrganizationService {
 
     const member = await this.orgRepo.addMember({
       organizationId: orgId,
-      userId: targetUser.id,
+      memberId: targetUser.id,
       role: memberRole,
     });
 

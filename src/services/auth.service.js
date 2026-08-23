@@ -167,7 +167,8 @@ class AuthService {
 			throw new ApiError(401, "Invalid or expired refresh token");
 		}
 
-		const memberships = await this.repository.findMembershipByUserId(storedToken.userId);
+		const memberId = storedToken.user?.id || storedToken.userId;
+		const memberships = await this.repository.findMembershipByMemberId(memberId);
 		const organization = memberships[0]?.organization;
 		const accessToken = this.#signAccessToken(storedToken.user, organization);
 		const nextRefreshToken = crypto.randomBytes(48).toString("hex");
@@ -178,7 +179,7 @@ class AuthService {
 			await this.repository.rotateRefreshToken(
 				storedToken.id,
 				{
-					userId: storedToken.userId,
+					userId: memberId,
 					tokenHash: nextRefreshTokenHash,
 					expiresAt: nextExpiresAt,
 				},

@@ -23,7 +23,7 @@ describe("Unit Tests: Task Logic & Assignment Validation", () => {
       async () => {
         await taskService.createTask({
           orgId: "org-456",
-          userId: "user-111",
+          creatorAdminId: "admin-111",
           projectId: "proj-123",
           title: "New Feature Task",
           assignedTo: "outsider-user-999",
@@ -48,7 +48,7 @@ describe("Unit Tests: Task Logic & Assignment Validation", () => {
       async () => {
         await taskService.createTask({
           orgId: "org1",
-          userId: "u1",
+          creatorAdminId: "a1",
           projectId: "p1",
           title: "Valid Title",
           status: "INVALID_STATUS",
@@ -74,7 +74,7 @@ describe("Unit Tests: Task Logic & Assignment Validation", () => {
       async () => {
         await taskService.createTask({
           orgId: "org1",
-          userId: "u1",
+          creatorAdminId: "a1",
           projectId: "p1",
           title: longTitle,
         });
@@ -101,6 +101,7 @@ describe("Unit Tests: Task Logic & Assignment Validation", () => {
         await projectService.deleteProject({
           projectId: "proj-1",
           orgId: "org-1",
+          requesterAdminId: "admin-1",
           userRole: "ADMIN",
         });
       },

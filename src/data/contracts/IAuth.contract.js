@@ -7,7 +7,7 @@ class IAuthRepository {
     throw new Error('IAuthRepository.findUserByUsername must be implemented');
   }
 
-  async findUserById(_userId) {
+  async findUserById(_memberId) {
     throw new Error('IAuthRepository.findUserById must be implemented');
   }
 
@@ -23,8 +23,8 @@ class IAuthRepository {
     throw new Error('IAuthRepository.createOrganizationMember must be implemented');
   }
 
-  async findMembershipByUserId(_userId) {
-    throw new Error('IAuthRepository.findMembershipByUserId must be implemented');
+  async findMembershipByMemberId(_memberId) {
+    throw new Error('IAuthRepository.findMembershipByMemberId must be implemented');
   }
 
   async createRefreshToken(_tokenData) {
@@ -43,7 +43,7 @@ class IAuthRepository {
     throw new Error('IAuthRepository.revokeRefreshToken must be implemented');
   }
 
-  async revokeAllUserRefreshTokens(_userId, _revokedAt) {
+  async revokeAllUserRefreshTokens(_memberId, _revokedAt) {
     throw new Error('IAuthRepository.revokeAllUserRefreshTokens must be implemented');
   }
 
@@ -51,7 +51,7 @@ class IAuthRepository {
     throw new Error('IAuthRepository.registerUserWithOrganization must be implemented');
   }
   
-  async markUserVerified(_userId) {
+  async markUserVerified(_memberId) {
     throw new Error('IAuthRepository.markUserVerified must be implemented');
   }
 }

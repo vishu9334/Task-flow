@@ -17,7 +17,7 @@ class ProjectController {
     const { name, description } = req.body;
     const project = await this.service.createProject({
       orgId: req.organizationId,
-      userId: req.user.sub,
+      creatorAdminId: req.user.sub,
       name,
       description,
     });
@@ -74,6 +74,7 @@ class ProjectController {
     const result = await this.service.deleteProject({
       projectId: id,
       orgId: req.organizationId,
+      requesterAdminId: req.user.sub,
       userRole: req.membership?.role || req.user?.role,
     });
 

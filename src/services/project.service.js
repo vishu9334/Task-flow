@@ -6,7 +6,10 @@ class ProjectService {
     this.repository = repository;
   }
 
-  async createProject({ orgId, userId, name, description }) {
+  async createProject({ orgId, creatorAdminId, name, description }) {
+    if (!creatorAdminId) {
+      throw new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED");
+    }
     if (!orgId) {
       throw new ApiError(403, "Organization context is required", [], "ORGANIZATION_REQUIRED");
     }
@@ -29,7 +32,7 @@ class ProjectService {
       orgId,
       name: name.trim(),
       description: description ? String(description).trim() : null,
-      createdBy: userId,
+      createdBy: creatorId,
     });
 
     return project;
@@ -138,7 +141,7 @@ class ProjectService {
     return this.repository.updateProject(projectId, updateData);
   }
 
-  async deleteProject({ projectId, orgId, userRole }) {
+  async deleteProject({ projectId, orgId, requesterAdminId, userRole }) {
     if (!projectId) {
       throw new ApiError(400, "Project ID is required", [], "VALIDATION_ERROR");
     }

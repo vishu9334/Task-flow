@@ -15,7 +15,7 @@ class OrganizationController {
   async createOrganization(req, res) {
     const { name, slug } = req.body;
     const organization = await this.service.createOrganization({
-      userId: req.user.sub,
+      adminId: req.user.sub,
       name,
       slug,
     });
@@ -27,7 +27,7 @@ class OrganizationController {
 
   async getMyOrganizations(req, res) {
     const organizations = await this.service.getMyOrganizations({
-      userId: req.user.sub,
+      memberId: req.user.sub,
     });
 
     return res
@@ -39,7 +39,7 @@ class OrganizationController {
     const { email, role } = req.body;
     const member = await this.service.addMember({
       orgId: req.organizationId,
-      requesterUserId: req.user.sub,
+      requesterAdminId: req.user.sub,
       requesterRole: req.membership?.role || req.user?.role,
       email,
       role,

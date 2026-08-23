@@ -7,26 +7,26 @@ class PostgresOrganizationData extends IOrganizationRepository {
     this.client = client;
   }
 
-  async createOrganization({ name, slug, userId }) {
+  async createOrganization({ name, slug, adminId }) {
     return this.client.$transaction(async (transaction) => {
       const organization = await transaction.organization.create({
         data: {
           name,
           slug,
-          userId,
+          userId: adminId,
         },
       });
 
       const member = await transaction.organizationMember.create({
         data: {
           organizationId: organization.id,
-          userId,
+          userId: adminId,
           role: "ADMIN",
         },
       });
 
       await transaction.user.update({
-        where: { id: userId },
+        where: { id: adminId },
         data: { role: "ADMIN" },
       });
 
@@ -57,9 +57,9 @@ class PostgresOrganizationData extends IOrganizationRepository {
     });
   }
 
-  async findOrganizationsByUserId(userId) {
+  async findOrganizationsByMemberId(memberId) {
     const memberships = await this.client.organizationMember.findMany({
-      where: { userId },
+      where: { userId: memberId },
       include: {
         organization: {
           include: {
@@ -81,12 +81,12 @@ class PostgresOrganizationData extends IOrganizationRepository {
     }));
   }
 
-  async addMember({ organizationId, userId, role = "MEMBER" }) {
+  async addMember({ organizationId, memberId, role = "MEMBER" }) {
     return this.client.$transaction(async (transaction) => {
       const member = await transaction.organizationMember.create({
         data: {
           organizationId,
-          userId,
+          userId: memberId,
           role,
         },
         include: {
@@ -102,10 +102,10 @@ class PostgresOrganizationData extends IOrganizationRepository {
         },
       });
 
-      const user = await transaction.user.findUnique({ where: { id: userId } });
+      const user = await transaction.user.findUnique({ where: { id: memberId } });
       if (user && user.role === "USER") {
         await transaction.user.update({
-          where: { id: userId },
+          where: { id: memberId },
           data: { role: role === "ADMIN" ? "ADMIN" : "MEMBER" },
         });
       }
@@ -134,12 +134,12 @@ class PostgresOrganizationData extends IOrganizationRepository {
     });
   }
 
-  async findMembership(organizationId, userId) {
+  async findMembership(organizationId, memberId) {
     return this.client.organizationMember.findUnique({
       where: {
         organizationId_userId: {
           organizationId,
-          userId,
+          userId: memberId,
         },
       },
     });

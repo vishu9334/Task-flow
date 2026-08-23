@@ -19,9 +19,9 @@ class PostgresAuthData extends IAuthRepository {
 		});
 	}
 
-	async findUserById(userId) {
+	async findUserById(memberId) {
 		return this.client.user.findUnique({
-			where: { id: userId },
+			where: { id: memberId },
 		});
 	}
 
@@ -43,9 +43,9 @@ class PostgresAuthData extends IAuthRepository {
 		});
 	}
 
-	async findMembershipByUserId(userId) {
+	async findMembershipByMemberId(memberId) {
 		return this.client.organizationMember.findMany({
-			where: { userId },
+			where: { userId: memberId },
 			include: {
 				organization: true,
 			},
@@ -89,10 +89,10 @@ class PostgresAuthData extends IAuthRepository {
 		});
 	}
 
-	async revokeAllUserRefreshTokens(userId, revokedAt = new Date()) {
+	async revokeAllUserRefreshTokens(memberId, revokedAt = new Date()) {
 		return this.client.refreshToken.updateMany({
 			where: {
-				userId,
+				userId: memberId,
 				revokedAt: null,
 			},
 			data: { revokedAt },
@@ -124,9 +124,9 @@ class PostgresAuthData extends IAuthRepository {
 		});
 	}
 
-	async markUserVerified(userId) {
+	async markUserVerified(memberId) {
 		return this.client.user.update({
-			where: { id: userId },
+			where: { id: memberId },
 			data: { isVerified: true },
 		});
 	}
