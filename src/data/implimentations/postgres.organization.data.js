@@ -25,6 +25,11 @@ class PostgresOrganizationData extends IOrganizationRepository {
         },
       });
 
+      await transaction.user.update({
+        where: { id: userId },
+        data: { role: "ADMIN" },
+      });
+
       return {
         ...organization,
         role: member.role,
@@ -77,23 +82,35 @@ class PostgresOrganizationData extends IOrganizationRepository {
   }
 
   async addMember({ organizationId, userId, role = "MEMBER" }) {
-    return this.client.organizationMember.create({
-      data: {
-        organizationId,
-        userId,
-        role,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            username: true,
-            email: true,
+    return this.client.$transaction(async (transaction) => {
+      const member = await transaction.organizationMember.create({
+        data: {
+          organizationId,
+          userId,
+          role,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              username: true,
+              email: true,
+            },
           },
         },
-      },
+      });
+
+      const user = await transaction.user.findUnique({ where: { id: userId } });
+      if (user && user.role === "USER") {
+        await transaction.user.update({
+          where: { id: userId },
+          data: { role: role === "ADMIN" ? "ADMIN" : "MEMBER" },
+        });
+      }
+
+      return member;
     });
   }
 
