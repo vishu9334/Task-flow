@@ -4,12 +4,18 @@ import { ApiError } from "../utils/apiError.js";
 class OrganizationMiddleware {
   static async attach(req, _res, next) {
     try {
-      const organizationId =
-        req.user?.organizationId ||
+      const memberships = await postgresAuthData.findMembershipByMemberId(req.user.sub);
+
+      let organizationId =
         req.headers["x-organization-id"] ||
-        req.cookies?.organizationId ||
         req.body?.organizationId ||
-        req.body?.orgId;
+        req.body?.orgId ||
+        req.cookies?.organizationId ||
+        req.user?.organizationId;
+
+      if (!organizationId && memberships.length > 0) {
+        organizationId = memberships[0].organizationId;
+      }
 
       if (!organizationId) {
         return next(
@@ -17,7 +23,6 @@ class OrganizationMiddleware {
         );
       }
 
-      const memberships = await postgresAuthData.findMembershipByMemberId(req.user.sub);
       const membership = memberships.find((item) => item.organizationId === organizationId);
 
       if (!membership) {

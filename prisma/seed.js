@@ -3,19 +3,15 @@ import bcrypt from "bcryptjs";
 
 
 async function main() {
-  console.log("[SEED] Starting TaskFlow database seeding...");
+  console.log("[SEED] Checking TaskFlow database...");
 
-  // Clean existing data
-  await prisma.comment.deleteMany({});
-  await prisma.taskAssignment.deleteMany({});
-  await prisma.task.deleteMany({});
-  await prisma.project.deleteMany({});
-  await prisma.organizationMember.deleteMany({});
-  await prisma.organization.deleteMany({});
-  await prisma.refreshToken.deleteMany({});
-  await prisma.user.deleteMany({});
+  const userCount = await prisma.user.count();
+  if (userCount > 0) {
+    console.log(`[SEED] Database already contains ${userCount} users. Preserving existing data.`);
+    return;
+  }
 
-  console.log("[SEED] Existing database records cleared.");
+  console.log("[SEED] Database empty. Starting initial TaskFlow database seeding...");
 
   // Common password hash for test users: "Password123!"
   const passwordHash = await bcrypt.hash("Password123!", 12);
