@@ -9,6 +9,10 @@ const deadLetterQueue = new Queue(DEAD_LETTER_QUEUE_NAME, {
   connection: redisConnection.duplicate(),
 });
 
+deadLetterQueue.on("error", (err) => {
+  console.warn(`[DEAD LETTER QUEUE WARNING] ${err.message}`);
+});
+
 const processEmailJob = async (job) => {
   const { type, toEmail, userName, taskTitle, otp } = job.data;
 

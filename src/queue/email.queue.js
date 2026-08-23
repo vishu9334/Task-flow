@@ -15,6 +15,10 @@ const emailQueue = new Queue("email-notifications", {
   },
 });
 
+emailQueue.on("error", (err) => {
+  console.warn(`[EMAIL QUEUE WARNING] ${err.message}`);
+});
+
 console.log(`Email queue configured for ${config.REDIS_URL}`);
 
 export { emailQueue };
