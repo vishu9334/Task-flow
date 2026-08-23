@@ -32,7 +32,7 @@ class ProjectService {
       orgId,
       name: name.trim(),
       description: description ? String(description).trim() : null,
-      createdBy: creatorId,
+      createdBy: creatorAdminId,
     });
 
     return project;
