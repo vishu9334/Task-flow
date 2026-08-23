@@ -7,7 +7,9 @@ class OrganizationMiddleware {
       const organizationId =
         req.user?.organizationId ||
         req.headers["x-organization-id"] ||
-        req.cookies?.organizationId;
+        req.cookies?.organizationId ||
+        req.body?.organizationId ||
+        req.body?.orgId;
 
       if (!organizationId) {
         return next(

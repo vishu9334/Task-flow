@@ -82,6 +82,10 @@ class OrganizationService {
 
     const existingMembership = await this.orgRepo.findMembership(orgId, targetUser.id);
     if (existingMembership) {
+      const existingRole = existingMembership.role || "MEMBER";
+      if (existingRole === "ADMIN") {
+        throw new ApiError(409, "User is already an admin of this organization", [], "ADMIN_EXISTS");
+      }
       throw new ApiError(409, "User is already a member of this organization", [], "MEMBER_EXISTS");
     }
 

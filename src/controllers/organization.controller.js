@@ -25,7 +25,7 @@ class OrganizationController {
       .json(new ApiResponse(201, organization, "Organization created successfully"));
   }
 
-  async getMyOrganizations(req, res) {
+  async  getMyOrganizations(req, res) {
     const organizations = await this.service.getMyOrganizations({
       adminId: req.user.sub,
     });
