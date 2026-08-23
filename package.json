@@ -7,6 +7,8 @@
     "start": "node server.js",
     "dev": "concurrently --kill-others \"nodemon server.js\" \"node src/workers/email.worker.js\"",
     "worker": "node src/workers/email.worker.js",
+    "build": "npx prisma generate",
+    "postinstall": "npx prisma generate",
     "seed": "node prisma/seed.js",
     "test": "node --test tests/run.js"
   },
