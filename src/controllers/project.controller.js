@@ -18,6 +18,7 @@ class ProjectController {
     const project = await this.service.createProject({
       orgId: req.organizationId,
       creatorAdminId: req.user.sub,
+      userRole: req.membership?.role || req.user?.role,
       name,
       description,
     });

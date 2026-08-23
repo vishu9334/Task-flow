@@ -10,8 +10,8 @@ const projectRouter = Router();
 projectRouter.use(authenticate);
 projectRouter.use(attachOrganization);
 
-// Project CRUD Routes
-projectRouter.post("/", projectController.createProject);
+// Project CRUD Routes (Admins only can create projects)
+projectRouter.post("/", requireRoles("ADMIN"), projectController.createProject);
 projectRouter.get("/", projectController.getProjects);
 projectRouter.get("/:id", projectController.getProjectById);
 projectRouter.patch("/:id", projectController.updateProject);

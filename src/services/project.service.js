@@ -6,9 +6,17 @@ class ProjectService {
     this.repository = repository;
   }
 
-  async createProject({ orgId, creatorAdminId, name, description }) {
+  async createProject({ orgId, creatorAdminId, userRole, name, description }) {
     if (!creatorAdminId) {
       throw new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED");
+    }
+    if (userRole && userRole !== "ADMIN") {
+      throw new ApiError(
+        403,
+        "Only organization admins are allowed to create projects",
+        [],
+        "FORBIDDEN"
+      );
     }
     if (!orgId) {
       throw new ApiError(403, "Organization context is required", [], "ORGANIZATION_REQUIRED");
