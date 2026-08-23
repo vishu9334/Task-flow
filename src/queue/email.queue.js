@@ -10,7 +10,8 @@ const emailQueue = new Queue("email-notifications", {
       type: "exponential",
       delay: 1000,
     },
-    removeOnComplete: true,
+    removeOnComplete: { count: 1000 },
+    removeOnFail: { count: 5000 },
   },
 });
 

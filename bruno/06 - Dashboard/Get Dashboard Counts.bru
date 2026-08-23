@@ -1,0 +1,16 @@
+meta {
+  name: 1. Get Dashboard Counts
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/dashboard/counts
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

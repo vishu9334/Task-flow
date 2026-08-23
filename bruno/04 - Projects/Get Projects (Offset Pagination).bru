@@ -1,0 +1,16 @@
+meta {
+  name: 2. Get Projects (Offset Pagination)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/projects?page=1&limit=10
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

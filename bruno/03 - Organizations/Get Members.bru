@@ -1,0 +1,16 @@
+meta {
+  name: 4. Get Org Members
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/organizations/members
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

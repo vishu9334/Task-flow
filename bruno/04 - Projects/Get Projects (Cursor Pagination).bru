@@ -1,0 +1,16 @@
+meta {
+  name: 3. Get Projects (Cursor Pagination)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/projects?limit=5&cursor={{projectId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

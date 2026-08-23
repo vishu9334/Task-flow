@@ -1,0 +1,23 @@
+meta {
+  name: 5. Update Project
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/projects/{{projectId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "name": "Mobile Application Redesign v2",
+    "description": "Updated project description"
+  }
+}

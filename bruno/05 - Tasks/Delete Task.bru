@@ -1,0 +1,16 @@
+meta {
+  name: 7. Delete Task (Soft Delete)
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/tasks/{{taskId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

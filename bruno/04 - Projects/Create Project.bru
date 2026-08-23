@@ -1,0 +1,29 @@
+meta {
+  name: 1. Create Project
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/projects
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "name": "Mobile Application Redesign",
+    "description": "Cross-platform mobile app with React Native and Expo"
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.data && res.body.data.id) {
+    bru.setEnvVar("projectId", res.body.data.id);
+  }
+}

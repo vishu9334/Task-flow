@@ -1,0 +1,16 @@
+meta {
+  name: 2. Get Tasks (Filters & Pagination)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/tasks?status=TODO&priority=HIGH&page=1&limit=10
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

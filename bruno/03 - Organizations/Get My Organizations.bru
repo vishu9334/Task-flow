@@ -1,0 +1,15 @@
+meta {
+  name: 2. Get My Organizations
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/organizations/my
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}

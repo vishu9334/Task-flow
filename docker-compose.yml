@@ -1,0 +1,102 @@
+services:
+  # 1. PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: taskflow_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskflow_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d taskflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Redis for BullMQ Queue & Caching
+  redis:
+    image: redis:7-alpine
+    container_name: taskflow_redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. Express REST API Server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskflow_api
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - QUEUE_PORT=32856
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/taskflow_db
+      - REDIS_URL=redis://redis:6379
+      - JWT_ACCESS_SECRET=bc16e0f2d7d2f0a45adbe2feeebc1e6929a64407da7c4ac0b7d0c59e356b4abf
+      - JWT_REFRESH_SECRET=fc5161401262f7107a6664c793ff74e43a727c04cff173eaa1465c545d29e428
+      - JWT_ACCESS_EXPIRES_IN=15m
+      - JWT_REFRESH_EXPIRES_IN=7d
+      - BCRYPT_SALT_ROUNDS=12
+      - AUTH_RATE_LIMIT=10
+      - AUTH_RATE_WINDOW_MS=60000
+      - REGISTRATION_TTL_SECONDS=120
+      - BREVO_API_KEY=mock
+      - BREVO_FROM_NAME=TaskFlow
+      - BREVO_FROM_EMAIL=no-reply@taskflow.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && node prisma/seed.js && node server.js"
+
+  # 4. Background Email Worker
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskflow_worker
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - QUEUE_PORT=32856
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/taskflow_db
+      - REDIS_URL=redis://redis:6379
+      - JWT_ACCESS_SECRET=bc16e0f2d7d2f0a45adbe2feeebc1e6929a64407da7c4ac0b7d0c59e356b4abf
+      - JWT_REFRESH_SECRET=fc5161401262f7107a6664c793ff74e43a727c04cff173eaa1465c545d29e428
+      - JWT_ACCESS_EXPIRES_IN=15m
+      - JWT_REFRESH_EXPIRES_IN=7d
+      - BCRYPT_SALT_ROUNDS=12
+      - AUTH_RATE_LIMIT=10
+      - AUTH_RATE_WINDOW_MS=60000
+      - REGISTRATION_TTL_SECONDS=120
+      - BREVO_API_KEY=mock
+      - BREVO_FROM_NAME=TaskFlow
+      - BREVO_FROM_EMAIL=no-reply@taskflow.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: node src/workers/email.worker.js
+
+volumes:
+  postgres_data:
+  redis_data:

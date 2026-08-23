@@ -1,0 +1,16 @@
+meta {
+  name: 6. Delete Project (Admin Only)
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/projects/{{projectId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

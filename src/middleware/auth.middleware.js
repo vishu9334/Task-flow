@@ -7,7 +7,7 @@ class AuthMiddleware {
     const authorization = req.headers.authorization;
     const token = authorization?.startsWith("Bearer ")
       ? authorization.slice(7)
-      : null;
+      : req.cookies?.accessToken || null;
 
     if (!token) {
       return next(new ApiError(401, "Authentication required", [], "AUTHENTICATION_REQUIRED"));

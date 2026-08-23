@@ -1,0 +1,22 @@
+meta {
+  name: 5. Assign User to Task (Triggers Email Job)
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/tasks/{{taskId}}/assign
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "userId": "3ca6ed15-72e5-4bff-96cd-26d72e10bcff"
+  }
+}

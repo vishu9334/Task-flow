@@ -1,0 +1,22 @@
+meta {
+  name: 6. Unassign User from Task
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/tasks/{{taskId}}/unassign
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "userId": "3ca6ed15-72e5-4bff-96cd-26d72e10bcff"
+  }
+}

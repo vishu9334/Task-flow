@@ -4,18 +4,27 @@ import { ApiError } from "../utils/apiError.js";
 class OrganizationMiddleware {
   static async attach(req, _res, next) {
     try {
-      const organizationId = req.user?.organizationId;
+      const organizationId =
+        req.user?.organizationId ||
+        req.headers["x-organization-id"] ||
+        req.cookies?.organizationId;
+
       if (!organizationId) {
-        return next(new ApiError(403, "Organization context is required", [], "ORGANIZATION_REQUIRED"));
+        return next(
+          new ApiError(403, "Organization context is required", [], "ORGANIZATION_REQUIRED")
+        );
       }
 
       const memberships = await postgresAuthData.findMembershipByUserId(req.user.sub);
       const membership = memberships.find((item) => item.organizationId === organizationId);
 
       if (!membership) {
-        return next(new ApiError(403, "Organization access forbidden", [], "ORGANIZATION_FORBIDDEN"));
+        return next(
+          new ApiError(403, "Organization access forbidden", [], "ORGANIZATION_FORBIDDEN")
+        );
       }
 
+      req.organizationId = organizationId;
       req.organization = membership.organization;
       req.membership = membership;
       return next();

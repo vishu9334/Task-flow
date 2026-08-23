@@ -1,0 +1,33 @@
+meta {
+  name: 1. Create Task
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/tasks
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "projectId": "{{projectId}}",
+    "title": "Build User Authentication Screen",
+    "description": "Create modern login & register UI screens",
+    "status": "TODO",
+    "priority": "HIGH",
+    "dueDate": "2026-12-31T23:59:59.000Z"
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.data && res.body.data.id) {
+    bru.setEnvVar("taskId", res.body.data.id);
+  }
+}

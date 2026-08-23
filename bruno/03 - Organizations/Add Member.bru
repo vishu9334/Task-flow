@@ -1,0 +1,23 @@
+meta {
+  name: 3. Add Member (Admin Only)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/organizations/members
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "email": "jane.smith@taskflow.dev",
+    "role": "MEMBER"
+  }
+}

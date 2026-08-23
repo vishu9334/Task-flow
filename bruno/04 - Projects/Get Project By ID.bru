@@ -1,0 +1,16 @@
+meta {
+  name: 4. Get Project By ID
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/projects/{{projectId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}

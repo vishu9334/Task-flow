@@ -1,0 +1,21 @@
+meta {
+  name: 1. Register User (Step 1)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "Alex",
+    "lastName": "Hunter",
+    "username": "alex.hunter",
+    "email": "alex.hunter@taskflow.dev",
+    "password": "Password123!"
+  }
+}

@@ -1,0 +1,23 @@
+meta {
+  name: 4. Update Task
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/tasks/{{taskId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  x-organization-id: {{orgId}}
+}
+
+body:json {
+  {
+    "status": "IN_PROGRESS",
+    "priority": "URGENT"
+  }
+}

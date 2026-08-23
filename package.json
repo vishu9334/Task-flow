@@ -4,8 +4,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node server.js",
     "dev": "concurrently --kill-others \"nodemon server.js\" \"node src/workers/email.worker.js\"",
-    "worker": "node src/workers/email.worker.js"
+    "worker": "node src/workers/email.worker.js",
+    "seed": "node prisma/seed.js",
+    "test": "node --test tests/run.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -25,11 +31,14 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "pg": "^8.23.0",
-    "prisma": "^7.9.1"
+    "prisma": "^7.9.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "autocannon": "^8.0.0",
     "concurrently": "^9.2.4",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
   }
 }
