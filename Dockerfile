@@ -5,12 +5,11 @@ RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Install dependencies first for Docker caching
+# Copy package files and prisma schema for caching and generation
 COPY package*.json ./
-RUN npm install
-
-# Copy application source code and prisma schema
 COPY prisma ./prisma/
+
+RUN npm install
 RUN npx prisma generate
 
 COPY . .
