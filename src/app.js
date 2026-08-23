@@ -20,6 +20,16 @@ app.use(cookieParser());
 // OpenAPI Swagger UI documentation
 setupSwaggerDocs(app);
 
+// Root route for cloud health checks and API discovery
+app.get('/', (_req, res) => {
+  return res.status(200).json({
+    name: "TaskFlow API",
+    status: "healthy",
+    docs: "/api-docs",
+    version: "1.0.0",
+  });
+});
+
 app.use('/health', healthRouter);
 app.use('/auth', authRouter);
 app.use('/organizations', organizationRouter);
