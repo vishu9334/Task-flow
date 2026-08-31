@@ -48,6 +48,8 @@ class AuthController {
   async logout(req, res) {
     const refreshToken = req.cookies?.refreshToken || req.body.refreshToken;
     const result = await this.service.logout(refreshToken);
+    
+   // Here  clearAuthCookies(res); of res is object and where logic write in the impliment that place have object to extract cookie like res.clearCookie.
     clearAuthCookies(res);
 
     return res

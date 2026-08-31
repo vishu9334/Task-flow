@@ -33,7 +33,7 @@ model User {
   memberships     OrganizationMember[]
   projectsCreated Project[]
   createdTasks    Task[]               @relation("TaskCreator")
-  assignedTasks   Task[]               @relation("TaskAssignee")
+  // assignedTasks   Task[]               @relation("TaskAssignee")
   taskAssignments TaskAssignment[]
   comments        Comment[]
   refreshTokens   RefreshToken[]
@@ -109,20 +109,20 @@ model Task {
   priority    TaskPriority @default(MEDIUM)
   dueDate     DateTime?
   createdBy   String       @db.Uuid
-  assignedTo  String?      @db.Uuid
+  // assignedTo  String?      @db.Uuid
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
 
   project     Project          @relation(fields: [projectId], references: [id])
   creator     User             @relation("TaskCreator", fields: [createdBy], references: [id])
-  assignee    User?            @relation("TaskAssignee", fields: [assignedTo], references: [id])
-  assignments TaskAssignment[]
+  // assignee    User?            @relation("TaskAssignee", fields: [assignedTo], references: [id]) Remove because task assignment is now handle with task assignment. 
+  assignments TaskAssignment[] // This line do only connect real TaskAssignment table here not insert Id or any thing
   comments    Comment[]
 
   @@index([projectId])
   @@index([createdBy])
-  @@index([assignedTo])
+  // @@index([assignedTo])
 }
 
 model TaskAssignment {

@@ -9,6 +9,7 @@ await import("./unit/pagination.test.js");
 await import("./integration/auth.test.js");
 await import("./integration/cross-tenant.test.js");
 await import("./integration/task.test.js");
+await import("./integration/comment.test.js");
 
 after(async () => {
   try {

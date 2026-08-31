@@ -5,7 +5,7 @@ class AppConfig {
   constructor(env = process.env) {
     this.POSTGRES_URI = env.DATABASE_URL;
     this.PORT = Number(env.PORT || 4000);
-    this.REDIS_URL = env.REDIS_URL || "redis://localhost:6379";
+    this.REDIS_URL = env.REDIS_URL || "redis://localhost:6380";
     this.BREVO_API_KEY = env.BREVO_API_KEY;
     this.BREVO_FROM_NAME = env.BREVO_FROM_NAME || "TaskFlow";
     this.BREVO_FROM_EMAIL = env.BREVO_FROM_EMAIL;
@@ -31,6 +31,7 @@ class AppConfig {
       BREVO_FROM_EMAIL: this.BREVO_FROM_EMAIL,
     };
 
+    // requiredValues check if obj of key and value in the one of value check if not available value then return name. 
     for (const [name, value] of Object.entries(requiredValues)) {
       if (!value) {
         throw new Error(`${name} is required`);

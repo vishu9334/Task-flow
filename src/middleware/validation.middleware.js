@@ -21,6 +21,7 @@ const validateRegister = validateRequired([
 ]);
 
 const validateLogin = validateRequired(["email", "password"]);
+
 const validateTokenRequest = (req, _res, next) => {
   if (req.body?.refreshToken || req.cookies?.refreshToken) {
     return next();
@@ -31,6 +32,7 @@ const validateTokenRequest = (req, _res, next) => {
 
 const validateRefresh = validateTokenRequest;
 const validateLogout = validateTokenRequest;
+
 const validateOtp = validateRequired(["email", "otp"]);
 
 export {
